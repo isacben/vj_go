@@ -1,6 +1,8 @@
-# vj
+# vj (go)
 
 JSON file viewer written in go.
+
+:construction: still developing
 
 ## Development
 

@@ -10,11 +10,12 @@ JSON file viewer written in go.
     - [x] normal mode: navigation
     - [x] line numbers
     - [x] resize window
+    - [ ] colored JSON
     - [ ] jump to line
     - [ ] commands row
     - [ ] hide/expand
 - [ ] commands mode
     - [ ] yank
 - [ ] visual mode
-- [ ] JSON parser
+- [ ] JSON processor
 - [ ] CLI

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+    "strconv"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/viewport"
@@ -111,7 +112,7 @@ var (
 			Foreground(lipgloss.Color("#ff9e64"))
 
 	input_str []string
-	repeat    int
+	repeat_buffer    string
 )
 
 func (m model) Init() tea.Cmd {
@@ -149,12 +150,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.vp_content.ScrollLeft(1)
 			case "up", "k":
 				{
-					m.move_cursor(0, -1)
+                    steps := 1
+                    if repeat_buffer != "" {
+                        steps = handle_repeat()
+                    }
+
+					m.move_cursor(0, -steps)
 					return m, nil
 				}
 			case "down", "j":
 				{
-					m.move_cursor(0, 1)
+                    steps := 1
+                    if repeat_buffer != "" {
+                        steps = handle_repeat()
+                    }
+
+					m.move_cursor(0, steps)
 					return m, nil
 				}
 			case "pgup", "K":
@@ -167,6 +178,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.move_cursor(0, min(len(input_str), m.vp_content.Height)/2)
 					return m, nil
 				}
+            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+                {
+                    repeat_buffer += fmt.Sprintf("%c", msg.Runes[0])
+                }
 			}
 		}
 
@@ -258,4 +273,15 @@ func or_zero(a int) int {
 		a = 0
 	}
 	return a
+}
+
+func handle_repeat() int {
+    number, err := strconv.Atoi(repeat_buffer)
+
+	if err != nil {
+		log.Fatal("Error converting string to int:", err)
+	}
+
+    repeat_buffer = ""
+    return number 
 }

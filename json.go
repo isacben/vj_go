@@ -1,21 +1,21 @@
 package main
 
 import (
-    "encoding/json"
-    "fmt"
-    "strings"
+	"encoding/json"
+	"fmt"
+	"strings"
 )
 
 // JSONProcessor handles JSON manipulation operations
 type JSONProcessor struct {
-    // any is an alias of: interface{}
-    data any
-    lines []string
+	// any is an alias of: interface{}
+	data  any
+	lines []string
 }
 
 // NewJSONProcessor creates a new processor from JSON bytes
 func NewJSONProcessor(jsonData []byte) (*JSONProcessor, error) {
-	var data any 
+	var data any
 	if err := json.Unmarshal(jsonData, &data); err != nil {
 		return nil, fmt.Errorf("failed to parse JSON: %w", err)
 	}
@@ -59,4 +59,3 @@ func (jp *JSONProcessor) QueryField(path string) (any, error) {
 
 	return current, nil
 }
-

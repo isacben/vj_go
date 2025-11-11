@@ -178,16 +178,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
                     m.moveToNextSibling()
                     return m, nil
                 }
-			case "pgup", "K":
-				{
-					m.move_cursor(0, -min(len(input_str), m.vp_content.Height)/2)
-					return m, nil
-				}
-			case "pgdown", "J":
-				{
-					m.move_cursor(0, min(len(input_str), m.vp_content.Height)/2)
-					return m, nil
-				}
             case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
                 {
                     repeat_buffer += fmt.Sprintf("%c", msg.Runes[0])

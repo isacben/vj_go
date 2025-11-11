@@ -168,6 +168,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.move_cursor(0, steps)
 					return m, nil
 				}
+            case "{":
+                {
+                    m.moveToPrevSibling()
+                    return m, nil
+                }
+            case "}" :
+                {
+                    m.moveToNextSibling()
+                    return m, nil
+                }
 			case "pgup", "K":
 				{
 					m.move_cursor(0, -min(len(input_str), m.vp_content.Height)/2)
@@ -252,6 +262,43 @@ func (m *model) move_cursor(dx int, dy int) {
 
 	// Adjust viewport if cursor moves outside visible area
 	m.adjust_viewport()
+}
+
+func (m *model) moveToNextSibling() {
+    currentLine := input_str[m.cursor_y]
+    indentLevel := getIndentLevel(currentLine)
+
+    // Find next line with same indent level
+    for i := m.cursor_y + 1; i < len(input_str); i++ {
+        line := input_str[i]
+        m.move_cursor(0, i - m.cursor_y)
+        if getIndentLevel(line) == indentLevel && isObjectKey(line) {
+            return
+        }
+        // Stop if we/ve gone up a level (reached parent)
+        if getIndentLevel(line) < indentLevel {
+            break
+        }
+    }
+}
+
+func (m *model) moveToPrevSibling() {
+    currentLine := input_str[m.cursor_y]
+    indentLevel := getIndentLevel(currentLine)
+
+    // Find next line with same indent level
+    for i := m.cursor_y - 1; i >= 0; i-- {
+        line := input_str[i]
+        m.move_cursor(0, -(m.cursor_y - i))
+
+        if getIndentLevel(line) == indentLevel && isObjectKey(line) {
+            return
+        }
+        // Stop if we/ve gone up a level (reached parent)
+        if getIndentLevel(line) < indentLevel {
+            break
+        }
+    }
 }
 
 func (m *model) adjust_viewport() {

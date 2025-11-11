@@ -59,3 +59,19 @@ func (jp *JSONProcessor) QueryField(path string) (any, error) {
 
 	return current, nil
 }
+
+func getIndentLevel(line string) int {
+    // Count leading spaces (2 spaces per level)
+    count := 0
+    for _, char := range line {
+        if char == ' ' { count++ } else { break }
+    }
+    return count / 2
+}
+
+func isObjectKey(line string) bool {
+    trimmed := strings.TrimSpace(line)
+    return strings.Contains(trimmed, ":") &&
+        !strings.HasPrefix(trimmed, "{") &&
+        !strings.HasPrefix(trimmed, "[")
+}
